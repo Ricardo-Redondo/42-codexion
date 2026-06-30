@@ -6,7 +6,7 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 14:04:59 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/06/30 16:34:55 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/06/30 23:11:23 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 // *** defines and typedefs ***
 
 typedef pthread_mutex_t	t_mtx;
-typedef pthread_cond_t	t_cond;
 typedef struct s_sim	t_sim;
 
 // colors
@@ -41,6 +40,17 @@ typedef struct s_sim	t_sim;
 
 // *** structs ***
 
+// coder status
+typedef enum e_status
+{
+	COMPILING,
+	DEBUGGING,
+	REFACTORING,
+	TAKE_DONGLE,
+	BURNED_OUT
+} t_status;
+
+// opcodes
 typedef enum e_opcode
 {
 	LOCK,
@@ -52,7 +62,15 @@ typedef enum e_opcode
 	DETACH
 }						t_opcode;
 
-// scheduler
+// time codes
+typedef enum e_time_code
+{
+	SEC,
+	MILISEC,
+	MICROSEC
+} t_time_code;
+
+// schedulers
 typedef enum e_scheduler
 {
 	FIFO,
@@ -77,8 +95,6 @@ typedef struct s_dongle
 {
 	t_mtx				dongle;
 	int					id;
-	int					dongle_cooldown;
-	t_cond				cond;
 }						t_dongle;
 
 // coder
@@ -86,11 +102,13 @@ typedef struct s_coder
 {
 	int					id;
 	pthread_t			thread_id;
+	t_mtx mutex;
+	long				compiles;
+	long				last_compile;
+	bool done_compiling;
 	t_dongle			*l_dongle;
 	t_dongle			*r_dongle;
-	int					time_to_burnout;
-	int					index;
-	int					priority;
+	t_args				args;
 	t_sim				*sim;
 }						t_coder;
 
@@ -98,7 +116,13 @@ typedef struct s_coder
 struct					s_sim
 {
 	t_args				args;
-	bool				end_sim;
+	bool				all_threads_ready;
+	bool				ended_sim;
+	long start_sim;
+	long num_threads_run;
+	t_mtx				sim_mutex;
+	t_mtx				write_mutex;
+	pthread_t monitor;
 	t_coder				*coders;
 	t_dongle			*dongles;
 };
@@ -106,7 +130,17 @@ struct					s_sim
 // *** functions ***
 
 // parser
-int						parser(int argc, char **argv, t_args *args);
+void						parser(int argc, char **argv, t_args *args);
+
+// init
+void init_sim(t_sim *sim);
+
+// sim
+void start_sim(t_sim *sim);
+void *single_coder(void *data);
+
+// monitor
+void *monitor_sim(void *data);
 
 // safe functions
 void					*safe_malloc(size_t bytes);
@@ -114,7 +148,24 @@ void					safe_mutex_handle(t_mtx *mutex, t_opcode opcode);
 void					safe_thread_handle(pthread_t *thread,
 							void *(*f)(void *), void *data, t_opcode opcode);
 
+// setter/getter
+void set_bool(t_mtx *mutex, bool *dst, bool value);
+void set_long(t_mtx *mutex, long *dst, long value);
+bool get_bool(t_mtx *mutex, bool *value);
+long get_long(t_mtx *mutex, long *value);
+bool sim_ended(t_sim *sim);
+
+// write status
+void write_status(t_status status, t_coder *coder);
+
 // utils
 void					error_exit(const char *error, const char *arg);
+long gettime(t_time_code time_code);
+void precise_usleep(long usec, t_sim *sim);
+
+// sync utils
+void wait_all_threads(t_sim *sim);
+void increment_long(t_mtx *mutex, long *value);
+bool all_threads_running(t_mtx *mutex, long *threads, long number_of_coders);
 
 #endif

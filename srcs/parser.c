@@ -6,7 +6,7 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:39:53 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/06/30 16:09:47 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/06/30 22:17:23 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,25 @@ static void ft_schedulecmp(const char *s1, t_args *arg)
 		error_exit("Wrong argument: ", s1);
 }
 
-static inline is_digit(char i)
+static inline int is_digit(char i)
 {
 	return (i >= '0' && i <= '9');
 }
 
 static int	ft_atoi_strict(const char *str)
 {
-	char *start;
+	int i;
 
-	start = *str;
-	if(*str == '-')
+	i = 0;
+	if(str[i] == '-')
 		return (0);	
-	while(*str)
+	while(str[i])
 	{
-		if(!is_digit(*str))
+		if(!is_digit(str[i]))
 			error_exit("Wrong argument: ", str);
-		*str++;
+		i++;
 	}
-	return(atoi(start));
+	return(atoi(str));
 }
 
 /*
@@ -49,10 +49,8 @@ static int	ft_atoi_strict(const char *str)
  * @param argv argument vector
  * @param args pointer to the argument struct
 */ 
-int	parser(int argc, char **argv, t_args *args)
+void	parser(int argc, char **argv, t_args *args)
 {
-	t_scheduler scheduler;
-
 	if (argc != 9)
 		error_exit("Wrong number of arguments, should be 8", NULL);
 	args->number_of_coders = ft_atoi_strict(argv[1]);
