@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/06 14:38:41 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/06/30 15:02:00 by rsao-pay         ###   ########.fr       */
+/*   Created: 2026/06/30 14:20:38 by rsao-pay          #+#    #+#             */
+/*   Updated: 2026/06/30 14:44:54 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+# include "codexion.h"
 
-/*
- * ./codexion 5 800 200 200 200 5 0 fifo
-*/
-int main(int argc, char **argv)
+void error_exit(const char *error, const char *arg)
 {
-    t_sim sim;
-
-    parser(argc, argv, &sim.args);
-    init_sim(&sim);
-    start_sim(&sim);
-    clean_sim(&sim);
+    fprintf(STDERR_FILENO, RED"%s\n"RESET, error);
+    if (arg)
+        fprintf(STDERR_FILENO, RED"%s\n"RESET, arg);
+    exit(EXIT_FAILURE);   
 }
