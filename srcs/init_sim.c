@@ -6,15 +6,15 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 13:29:51 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/06/30 22:39:59 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/07/07 15:45:38 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-static void assign_dongles(t_coder *coder, t_dongle *dongles, int pos)
+static void	assign_dongles(t_coder *coder, t_dongle *dongles, int pos)
 {
-	int coder_nbr;
+	int	coder_nbr;
 
 	coder_nbr = coder->args.number_of_coders;
 	coder->r_dongle = &dongles[(pos + 1) % coder_nbr];
@@ -24,15 +24,19 @@ static void assign_dongles(t_coder *coder, t_dongle *dongles, int pos)
 		coder->r_dongle = &dongles[pos];
 		coder->l_dongle = &dongles[(pos + 1) % coder_nbr];
 	}
+	coder->r_dongle->taken = false;
+	coder->r_dongle->cooldown_until = gettime(MILISEC);
+	coder->l_dongle->taken = false;
+	coder->l_dongle->cooldown_until = gettime(MILISEC);
 }
 
-static void coder_init(t_sim *sim)
+static void	coder_init(t_sim *sim)
 {
-	int i;
-	t_coder *coder;
+	int		i;
+	t_coder	*coder;
 
 	i = -1;
-	while(++i < sim->args.number_of_coders)
+	while (++i < sim->args.number_of_coders)
 	{
 		coder = sim->coders + i;
 		coder->id = i + 1;
@@ -48,23 +52,29 @@ static void coder_init(t_sim *sim)
 /*
  * @brief initializes all coders, dongles and additional simulation variables
  * @param *sim pointer to the simulation struct
-*/
-void init_sim(t_sim *sim)
+ */
+void	init_sim(t_sim *sim)
 {
-	int i;
+	int			i;
 
 	i = -1;
 	sim->ended_sim = false;
 	sim->all_threads_ready = false;
 	sim->num_threads_run = 0;
 	sim->coders = safe_malloc(sizeof(t_coder) * sim->args.number_of_coders);
+	memset(sim->coders, 0, sizeof(t_coder) * sim->args.number_of_coders);
 	safe_mutex_handle(&sim->sim_mutex, INIT);
 	safe_mutex_handle(&sim->write_mutex, INIT);
 	sim->dongles = safe_malloc(sizeof(t_dongle) * sim->args.number_of_coders);
+	memset(sim->dongles, 0, sizeof(t_dongle) * sim->args.number_of_coders);
 	while (++i < sim->args.number_of_coders)
 	{
 		safe_mutex_handle(&sim->dongles[i].dongle, INIT);
+		safe_cond_handle(&sim->dongles[i].cond, &sim->dongles[i].dongle, 0,
+			INIT);
 		sim->dongles[i].id = i;
+		sim->dongles[i].taken = false;
+		sim->dongles[i].cooldown_until = gettime(MILISEC);
 	}
 	coder_init(sim);
 }
