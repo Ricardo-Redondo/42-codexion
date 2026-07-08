@@ -6,7 +6,7 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 13:29:51 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/07/07 15:45:38 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/07/08 12:04:05 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,19 @@ static void	assign_dongles(t_coder *coder, t_dongle *dongles, int pos)
 	coder->r_dongle->cooldown_until = gettime(MILISEC);
 	coder->l_dongle->taken = false;
 	coder->l_dongle->cooldown_until = gettime(MILISEC);
+}
+
+static void dongle_init(t_dongle *dongle, int i, t_scheduler scheduler)
+{
+	safe_mutex_handle(&dongle->dongle, INIT);
+	safe_cond_handle(&dongle->cond, &dongle->dongle, 0, INIT);
+	dongle->id = i;
+	dongle->taken = false;
+	dongle->cooldown_until = gettime(MILISEC);
+	dongle->next_ticket = 0;
+	dongle->heap.nodes = malloc(2);
+	dongle->heap.size = 2;
+	dongle->heap.shceduler = scheduler;
 }
 
 static void	coder_init(t_sim *sim)
@@ -68,13 +81,6 @@ void	init_sim(t_sim *sim)
 	sim->dongles = safe_malloc(sizeof(t_dongle) * sim->args.number_of_coders);
 	memset(sim->dongles, 0, sizeof(t_dongle) * sim->args.number_of_coders);
 	while (++i < sim->args.number_of_coders)
-	{
-		safe_mutex_handle(&sim->dongles[i].dongle, INIT);
-		safe_cond_handle(&sim->dongles[i].cond, &sim->dongles[i].dongle, 0,
-			INIT);
-		sim->dongles[i].id = i;
-		sim->dongles[i].taken = false;
-		sim->dongles[i].cooldown_until = gettime(MILISEC);
-	}
+		dongle_init(&sim->dongles[i], i, sim->args.scheduler);
 	coder_init(sim);
 }

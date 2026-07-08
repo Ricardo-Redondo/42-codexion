@@ -1,26 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   heap.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/06 14:38:41 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/07/08 11:47:50 by rsao-pay         ###   ########.fr       */
+/*   Created: 2026/07/08 11:43:45 by rsao-pay          #+#    #+#             */
+/*   Updated: 2026/07/08 11:45:50 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-/*
- * ./codexion 5 800 200 200 200 5 0 fifo
- */
-int	main(int argc, char **argv)
+void pq_init()
 {
-	t_sim	sim;
+    
+}
 
-	parser(argc, argv, &sim.args);
-	init_sim(&sim);
-	start_sim(&sim);
-	clean_sim(&sim);
+void pq_free()
+{
+    
+}
+
+void pq_push()
+{
+    
+}
+
+t_node pq_pop()
+{
+    
+}
+t_node pq_peek()
+{
+    
 }

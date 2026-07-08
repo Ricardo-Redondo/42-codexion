@@ -8,7 +8,8 @@ SRC_DIR     = srcs/
 OBJ_DIR     = obj/
 
 SRC_FILES   = main.c parser.c utils.c sync_utils.c sim.c monitor.c \
-              safe_functions.c init_sim.c getter_setter.c write.c
+              safe_functions.c init_sim.c getter_setter.c write.c \
+			  clean.c dongle.c safe_functions2.c heap.c
 
 SRCS        = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJS        = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))

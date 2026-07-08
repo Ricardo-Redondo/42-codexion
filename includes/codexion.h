@@ -6,7 +6,7 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 14:04:59 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/07/07 15:16:46 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/07/08 12:01:32 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 typedef pthread_mutex_t	t_mtx;
 typedef pthread_cond_t	t_cond;
 typedef struct s_sim	t_sim;
+typedef struct s_coder	t_coder;
 
 // colors
 # define RESET "\033[0m"
@@ -69,7 +70,6 @@ typedef enum e_opcode
 // time codes
 typedef enum e_time_code
 {
-	SEC,
 	MILISEC,
 	MICROSEC
 }						t_time_code;
@@ -94,6 +94,20 @@ typedef struct s_args
 	t_scheduler			scheduler;
 }						t_args;
 
+// heap
+typedef struct s_node
+{
+	t_coder				*coder;
+	long				key;
+}						t_node;
+
+typedef struct s_heap
+{
+	t_node				*nodes;
+	long				size;
+	t_scheduler			shceduler;
+}						t_heap;
+
 // dongle
 typedef struct s_dongle
 {
@@ -102,10 +116,12 @@ typedef struct s_dongle
 	int					id;
 	bool				taken;
 	long				cooldown_until;
+	long				next_ticket;
+	t_heap				heap;
 }						t_dongle;
 
 // coder
-typedef struct s_coder
+struct					s_coder
 {
 	int					id;
 	pthread_t			thread_id;
@@ -117,7 +133,7 @@ typedef struct s_coder
 	t_dongle			*r_dongle;
 	t_args				args;
 	t_sim				*sim;
-}						t_coder;
+};
 
 // simulation
 struct					s_sim

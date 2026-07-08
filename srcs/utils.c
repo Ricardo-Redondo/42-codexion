@@ -6,7 +6,7 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/30 14:20:38 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/07/01 12:38:31 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/07/08 11:31:10 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ long	gettime(t_time_code time_code)
 
 	if (gettimeofday(&tv, NULL))
 		error_exit("Failed getting time of day.", NULL);
-	if (time_code == SEC)
-		return (tv.tv_sec + (tv.tv_usec / 1e6));
 	else if (time_code == MILISEC)
 		return ((tv.tv_sec * 1e3) + (tv.tv_usec / 1e3));
 	else if (time_code == MICROSEC)
