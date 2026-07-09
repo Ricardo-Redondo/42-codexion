@@ -6,7 +6,7 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 13:29:51 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/07/08 12:04:05 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/07/09 11:35:37 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,7 @@ static void dongle_init(t_dongle *dongle, int i, t_scheduler scheduler)
 	dongle->taken = false;
 	dongle->cooldown_until = gettime(MILISEC);
 	dongle->next_ticket = 0;
-	dongle->heap.nodes = malloc(2);
-	dongle->heap.size = 2;
-	dongle->heap.shceduler = scheduler;
+	heap_init(&dongle->heap, 0, scheduler);
 }
 
 static void	coder_init(t_sim *sim)

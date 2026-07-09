@@ -6,32 +6,39 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/08 11:43:45 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/07/08 11:45:50 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/07/09 11:54:05 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void pq_init()
+void heap_init(t_heap *heap, int size, t_scheduler scheduler)
 {
-    
+    heap->nodes = safe_malloc(sizeof(t_node) * 2);
+	heap->size = size;
+	heap->shceduler = scheduler;
 }
 
-void pq_free()
+void heap_free(t_heap *heap)
 {
-    
+    free(&heap->nodes);
 }
 
-void pq_push()
+void heap_push(t_heap *heap, t_coder *coder, long key)
 {
-    
+    t_node *node;
+
+    node = &heap->nodes[heap->size];
+    node->coder = coder;
+    node->key = key;
+    heap->size++;
 }
 
-t_node pq_pop()
+t_node heap_pop(t_heap)
 {
     
 }
-t_node pq_peek()
+t_node heap_peek()
 {
     
 }

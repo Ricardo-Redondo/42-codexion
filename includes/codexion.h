@@ -6,7 +6,7 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 14:04:59 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/07/08 12:01:32 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/07/09 11:32:25 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,9 @@ void					release_dongle(t_dongle *dongle, t_sim *sim);
 
 // monitor
 void					*monitor_sim(void *data);
+
+// heap
+void heap_init(t_heap *heap, int size, t_scheduler scheduler);
 
 // safe functions
 void					*safe_malloc(size_t bytes);
