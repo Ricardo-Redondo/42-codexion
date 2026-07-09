@@ -6,7 +6,7 @@
 /*   By: rsao-pay <rsao-pay@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/08 11:43:45 by rsao-pay          #+#    #+#             */
-/*   Updated: 2026/07/09 11:54:05 by rsao-pay         ###   ########.fr       */
+/*   Updated: 2026/07/09 14:10:59 by rsao-pay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,6 @@ void heap_init(t_heap *heap, int size, t_scheduler scheduler)
 void heap_free(t_heap *heap)
 {
     free(&heap->nodes);
-}
-
-void heap_push(t_heap *heap, t_coder *coder, long key)
-{
-    t_node *node;
-
-    node = &heap->nodes[heap->size];
-    node->coder = coder;
-    node->key = key;
-    heap->size++;
 }
 
 t_node heap_pop(t_heap)
